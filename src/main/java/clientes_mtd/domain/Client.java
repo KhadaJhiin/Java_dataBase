@@ -25,9 +25,8 @@ public class Client {
     }
 
 
-    public Client(String nombre, String apellido){
+    public Client(String nombre){
         this.nombre = nombre;
-        this.apellido = apellido;
     }
 
     public Client(String nombre, String apellido, String ciudad, String direccion, String telefono, int puntosPC){

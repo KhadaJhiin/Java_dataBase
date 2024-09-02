@@ -77,11 +77,86 @@ public class ClienteDAO implements IClienteDAO{
 
     @Override
     public boolean searchClientById(Client client) {
+
+        //We prepared sentences for connection sql
+        PreparedStatement ps;
+        ResultSet rs;
+        Connection con = Conexion.getConnection();
+        String sql = "SELECT * FROM cliente WHERE idcliente = ?";
+
+        try {
+
+            ps = con.prepareStatement(sql);
+            ps.setInt(1,client.getIdcliente());
+
+            rs = ps.executeQuery();
+
+            if(rs.next()){
+
+                client.setNombre(rs.getString("nombre"));
+                client.setApellido(rs.getString("apellido"));
+                client.setCiudad(rs.getString("ciudad"));
+                client.setDireccion(rs.getString("direccion"));
+                client.setTelefono(rs.getString("telefono"));
+                client.setPuntosPC(rs.getInt("puntosPC"));
+                return true;
+            }
+
+        }catch (Exception e){
+            System.out.println("Error to find client for id: "+e.getMessage());
+        }
+        finally {
+            try {
+                con.close();
+            }catch (Exception e){
+                System.out.println("Error to close connection: "+e.getMessage());
+            }
+        }
+
         return false;
     }
 
     @Override
     public boolean searchClientByName(Client client) {
+
+        //We prepared statement for sentences sql
+
+        PreparedStatement ps;
+        ResultSet rs;
+        Connection con = Conexion.getConnection();
+        String sql = "SELECT * FROM cliente WHERE nombre = ?";
+
+        try {
+
+            ps = con.prepareStatement(sql);
+            ps.setString(1,client.getNombre());
+
+            rs = ps.executeQuery();
+
+            if(rs.next()){
+
+                client.setIdcliente(rs.getInt("idcliente"));
+                client.setApellido(rs.getString("apellido"));
+                client.setCiudad(rs.getString("ciudad"));
+                client.setDireccion(rs.getString("direccion"));
+                client.setTelefono(rs.getString("telefono"));
+                client.setPuntosPC(rs.getInt("puntosPC"));
+
+                return true;
+            }
+
+        }catch (Exception e){
+            System.out.println("Error to find client: "+e.getMessage());
+        }
+        finally {
+            try {
+                con.close();
+            }catch (Exception e){
+                System.out.println("Error to close connection: "+e.getMessage());
+            }
+
+        }
+
         return false;
     }
 
@@ -104,9 +179,17 @@ public class ClienteDAO implements IClienteDAO{
 
         IClienteDAO clientes = new ClienteDAO();
 
-        var lista = clientes.listClients();
+//        var lista = clientes.listClients();
+//
+//        lista.forEach(System.out::println);
 
-        lista.forEach(System.out::println);
+        var cliente2 = new Client("Jose");
+
+        var encontrado = clientes.searchClientByName(cliente2);
+
+        System.out.println("Cliente encontrado: " + cliente2);
+
+
 
     }
 }
